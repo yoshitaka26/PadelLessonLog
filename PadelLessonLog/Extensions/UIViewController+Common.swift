@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Swinject
 
 extension UIViewController: UIPopoverPresentationControllerDelegate {
     public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -94,9 +93,23 @@ extension UIViewController: UIPopoverPresentationControllerDelegate {
             .show(in: self)
     }
     
+    func textInputAlertView(withTitle: String?,
+                            message: String? = nil,
+                            cancelString: String? = nil,
+                            cancelBlock: (() -> Void)? = nil,
+                            placeholder: String? = nil,
+                            textFieldBlock: ((UITextField) -> Void)? = nil,
+                            confirmString: String? = nil,
+                            confirmBlock: ((UITextField) -> Void)? = nil) {
+        UIAlertController(title: withTitle, message: message, preferredStyle: .alert)
+         .addCancelAction(title: cancelString, handler: cancelBlock)
+         .addTextFieldAction(placeholder: placeholder, handler: textFieldBlock)
+         .addOkActionWithTextField(title: confirmString, handler: confirmBlock)
+         .show(in: self)
+    }
     func warningAlertView(withTitle: String?, message: String? = nil, action: (() -> Void)? = nil) {
         UIAlertController(title: withTitle, message: message, preferredStyle: .alert)
-            .addCancelAction(title: DIALOG_OK, handler: action)
+            .addCancelAction(title: "OK", handler: action)
             .show(in: self)
     }
     // 表示とともにタイマーをセットする

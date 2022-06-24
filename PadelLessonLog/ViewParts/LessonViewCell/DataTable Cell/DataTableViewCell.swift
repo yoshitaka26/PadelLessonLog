@@ -7,25 +7,30 @@
 
 import UIKit
 
-class DataTableViewCell: UITableViewCell {
+final class DataTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var starButton: UIButton!
-    @IBOutlet weak var titleLabel: UILabel!
-    var lesson: Lesson?
+    @IBOutlet private weak var starButton: UIButton!
+    @IBOutlet private weak var titleLabel: UILabel!
+    var baseLesson: BaseLesson?
     
-    func setLessonData(lesson: Lesson) {
-        self.lesson = lesson
-        titleLabel.text = lesson.title
-        starButton.isSelected = lesson.favorite
-        starButton.tintColor = lesson.favorite ? .systemYellow : .lightGray
+    func setLessonData(baseLesson: BaseLesson) {
+        starButton.isHidden = false
+        self.baseLesson = baseLesson
+        titleLabel.text = baseLesson.title
+        if let lesson = baseLesson as? Lesson {
+            starButton.isSelected = lesson.favorite
+            starButton.tintColor = lesson.favorite ? .systemYellow : .lightGray
+        } else {
+            starButton.isHidden = true
+        }
     }
     
-    @IBAction func starButtonPressed(_ sender: UIButton) {
-        guard let safeLesson = lesson else { return }
-        safeLesson.favorite = !starButton.isSelected
-        safeLesson.save()
-        
-        starButton.isSelected.toggle()
-        starButton.tintColor = safeLesson.favorite ? .systemYellow : .lightGray
+    @IBAction private func starButtonPressed(_ sender: UIButton) {
+        if let lesson = baseLesson as? Lesson {
+            lesson.favorite = !starButton.isSelected
+            lesson.save()
+            starButton.isSelected.toggle()
+            starButton.tintColor = lesson.favorite ? .systemYellow : .lightGray
+        }
     }
 }

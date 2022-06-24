@@ -22,48 +22,38 @@ enum TableMode {
 
 class LessonViewModel: BaseViewModel {
     let settingButtonPressed = PassthroughSubject<Void, Never>()
-    let addLessonButtonPressed = PassthroughSubject<Void, Never>()
     let detailButtonPressed = PassthroughSubject<Lesson, Never>()
-    
-    let pushToEditLessonView = PassthroughSubject<Lesson, Never>()
-    let pushBackFromNewLessonView = PassthroughSubject<Void, Never>()
-    
     let allButtonPressed = PassthroughSubject<Void, Never>()
     let favoriteButtonPressed = PassthroughSubject<Void, Never>()
     let dataReload = PassthroughSubject<Void, Never>()
+    let pushToEditLessonView = PassthroughSubject<Lesson, Never>()
     
     private(set) var allBarButtonIsOn = CurrentValueSubject<Bool, Never>(true)
     private(set) var favoriteBarButtonIsOn = CurrentValueSubject<Bool, Never>(false)
     
     var tableMode = CurrentValueSubject<TableMode, Never>(.allTableView)
     
-    private(set) var transiton = PassthroughSubject<LessonTransition, Never>()
+    private(set) var transition = PassthroughSubject<LessonTransition, Never>()
     
-    private(set) var lessonsArray = CurrentValueSubject<[Lesson], Never>([])
+    override init() {
+        super.init()
+        mutate()
+    }
     
-    let coreDataMangaer = CoreDataManager.shared
-    
-    override func mutate() {
+    func mutate() {
         settingButtonPressed.sink { [weak self] _ in
             guard let self = self else { return }
-            self.transiton.send(.setting)
+            self.transition.send(.setting)
         }.store(in: &subscriptions)
-        
-        addLessonButtonPressed.sink { [weak self] _ in
-            guard let self = self else { return }
-            guard let courtImg = R.image.img_court(compatibleWith: .current) else { return }
-            let newLessonData = self.coreDataMangaer.createNewLesson(image: courtImg, steps: [""])
-            self.transiton.send(.lesson(newLessonData, true))
-        }.store(in: &subscriptions)
-        
+                
         detailButtonPressed.sink { [weak self] lessonData in
             guard let self = self else { return }
-            self.transiton.send(.detail(lessonData))
+            self.transition.send(.detail(lessonData))
         }.store(in: &subscriptions)
         
         pushToEditLessonView.sink { [weak self] editLessonData in
             guard let self = self else { return }
-            self.transiton.send(.lesson(editLessonData, false))
+            self.transition.send(.lesson(editLessonData, false))
         }.store(in: &subscriptions)
         
         allButtonPressed.sink { [weak self] _ in

@@ -21,22 +21,23 @@
                                 <rect key="frame" x="0.0" y="50" width="375" height="617"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xVG-TA-KCP" userLabel="Image View">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Image" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hzj-8W-0ur">
-                                                <rect key="frame" x="15" y="11" width="50" height="18"/>
+                                                <rect key="frame" x="15" y="16.5" width="50" height="17"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="q8H-xN-fKF"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vcV-aq-7M6">
-                                                <rect key="frame" x="147.5" y="5" width="80" height="30"/>
+                                                <rect key="frame" x="147.5" y="10.5" width="80" height="29"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="Ayb-QA-Gtk"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <state key="normal" title="Add Image"/>
                                                 <state key="selected" title="Delete"/>
                                                 <connections>
@@ -44,10 +45,11 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="etr-JM-hkF">
-                                                <rect key="frame" x="237.5" y="5" width="80" height="30"/>
+                                                <rect key="frame" x="237.5" y="10.5" width="80" height="29"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="YFJ-uR-n1c"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <state key="normal" title="Edit"/>
                                                 <connections>
                                                     <action selector="editImageButtonPressed:" destination="R5z-Bp-ENp" eventType="touchUpInside" id="bSj-Zv-iT5"/>
@@ -60,38 +62,40 @@
                                             <constraint firstItem="vcV-aq-7M6" firstAttribute="centerX" secondItem="xVG-TA-KCP" secondAttribute="centerX" id="EfA-QF-Gpp"/>
                                             <constraint firstItem="etr-JM-hkF" firstAttribute="centerY" secondItem="xVG-TA-KCP" secondAttribute="centerY" id="Ooc-P0-idD"/>
                                             <constraint firstItem="vcV-aq-7M6" firstAttribute="centerY" secondItem="xVG-TA-KCP" secondAttribute="centerY" id="PdS-9I-y7H"/>
-                                            <constraint firstAttribute="height" constant="40" id="R1E-9f-042"/>
+                                            <constraint firstAttribute="height" constant="50" id="R1E-9f-042"/>
                                             <constraint firstItem="etr-JM-hkF" firstAttribute="leading" secondItem="vcV-aq-7M6" secondAttribute="trailing" constant="10" id="ZQU-M1-IsJ"/>
                                             <constraint firstItem="hzj-8W-0ur" firstAttribute="leading" secondItem="xVG-TA-KCP" secondAttribute="leading" constant="15" id="eq5-rm-c52"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MdC-2E-oAh" userLabel="Step View">
-                                        <rect key="frame" x="0.0" y="40" width="375" height="40"/>
+                                        <rect key="frame" x="0.0" y="50" width="375" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Steps" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T68-d3-rjW">
-                                                <rect key="frame" x="15" y="11" width="50" height="18"/>
+                                                <rect key="frame" x="15" y="16.5" width="50" height="17"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="1jQ-2A-PN9"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q0e-DB-l9W">
-                                                <rect key="frame" x="147.5" y="5" width="80" height="30"/>
+                                                <rect key="frame" x="147.5" y="10.5" width="80" height="29"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="aiF-fC-Rhc"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <state key="normal" title="Add Step"/>
                                                 <connections>
                                                     <action selector="addStepButtonPressed:" destination="R5z-Bp-ENp" eventType="touchUpInside" id="gpJ-34-Mpo"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="73D-s1-XIR">
-                                                <rect key="frame" x="237.5" y="5" width="80" height="30"/>
+                                                <rect key="frame" x="237.5" y="10.5" width="80" height="29"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="7fA-8c-aMX"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <state key="normal" title="Edit"/>
                                                 <state key="selected" title="Done"/>
                                                 <connections>
@@ -101,7 +105,7 @@
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="6ek-2E-ScQ"/>
+                                            <constraint firstAttribute="height" constant="50" id="6ek-2E-ScQ"/>
                                             <constraint firstItem="T68-d3-rjW" firstAttribute="centerY" secondItem="MdC-2E-oAh" secondAttribute="centerY" id="MPb-6d-Poo"/>
                                             <constraint firstItem="73D-s1-XIR" firstAttribute="leading" secondItem="q0e-DB-l9W" secondAttribute="trailing" constant="10" id="jKw-N0-4cW"/>
                                             <constraint firstItem="q0e-DB-l9W" firstAttribute="centerY" secondItem="MdC-2E-oAh" secondAttribute="centerY" id="nWF-OO-85m"/>
@@ -111,7 +115,7 @@
                                         </constraints>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="none" allowsSelection="NO" rowHeight="100" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Q6j-OE-xeX">
-                                        <rect key="frame" x="0.0" y="80" width="375" height="537"/>
+                                        <rect key="frame" x="0.0" y="100" width="375" height="517"/>
                                         <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                                     </tableView>
                                 </subviews>
@@ -120,16 +124,16 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Please enter a titel" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QDS-My-eXy">
-                                        <rect key="frame" x="70" y="8" width="300" height="34"/>
+                                        <rect key="frame" x="80" y="8" width="285" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Eu-R7-3nt">
-                                        <rect key="frame" x="15" y="16" width="50" height="18"/>
+                                        <rect key="frame" x="15" y="16.5" width="50" height="17"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="DzY-9M-n2U"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -138,9 +142,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="1ZU-9A-Bgp"/>
                                     <constraint firstItem="5Eu-R7-3nt" firstAttribute="centerY" secondItem="UEk-XA-E2J" secondAttribute="centerY" id="KzQ-yA-BGU"/>
-                                    <constraint firstAttribute="trailing" secondItem="QDS-My-eXy" secondAttribute="trailing" constant="5" id="RuJ-tx-Dat"/>
+                                    <constraint firstAttribute="trailing" secondItem="QDS-My-eXy" secondAttribute="trailing" constant="10" id="RuJ-tx-Dat"/>
                                     <constraint firstItem="QDS-My-eXy" firstAttribute="centerY" secondItem="UEk-XA-E2J" secondAttribute="centerY" id="lLT-pG-WBu"/>
-                                    <constraint firstItem="QDS-My-eXy" firstAttribute="leading" secondItem="5Eu-R7-3nt" secondAttribute="trailing" constant="5" id="tmA-PA-yip"/>
+                                    <constraint firstItem="QDS-My-eXy" firstAttribute="leading" secondItem="5Eu-R7-3nt" secondAttribute="trailing" constant="15" id="tmA-PA-yip"/>
                                     <constraint firstItem="5Eu-R7-3nt" firstAttribute="leading" secondItem="UEk-XA-E2J" secondAttribute="leading" constant="15" id="yHB-xS-mlD"/>
                                 </constraints>
                             </view>
@@ -163,8 +167,11 @@
                         <outlet property="editImageButton" destination="etr-JM-hkF" id="ib8-GA-lvY"/>
                         <outlet property="editStepButton" destination="73D-s1-XIR" id="xfq-Ne-YhD"/>
                         <outlet property="imageButtonsAreaView" destination="xVG-TA-KCP" id="tyb-Nw-ml8"/>
+                        <outlet property="imageLabel" destination="hzj-8W-0ur" id="ady-JZ-RGL"/>
                         <outlet property="lessonNameTextField" destination="QDS-My-eXy" id="RDN-w5-Ls3"/>
                         <outlet property="mainTableView" destination="Q6j-OE-xeX" id="o5T-Ib-YCN"/>
+                        <outlet property="stepLabel" destination="T68-d3-rjW" id="CwD-SX-Vrg"/>
+                        <outlet property="titleLabel" destination="5Eu-R7-3nt" id="BFF-94-8ue"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rmN-28-nS0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

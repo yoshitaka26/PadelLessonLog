@@ -9,11 +9,11 @@ import UIKit
 import SceneKit
 import ARKit
 
-class PadelARViewController: UIViewController, ARSCNViewDelegate {
+final class PadelARViewController: UIViewController, ARSCNViewDelegate {
     
-    @IBOutlet weak var sceneView: ARSCNView!
-    @IBOutlet weak var lowOrHighSlider: UISlider!
-    @IBOutlet weak var ballOrPin: UISegmentedControl!
+    @IBOutlet private weak var sceneView: ARSCNView!
+    @IBOutlet private weak var lowOrHighSlider: UISlider!
+    @IBOutlet private weak var ballOrPin: UISegmentedControl!
     
     var padelCourt: SCNNode?
     var detectedPlane: SCNNode?

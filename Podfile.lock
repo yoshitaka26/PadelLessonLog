@@ -1,0 +1,36 @@
+PODS:
+  - LicensePlist (3.17.0)
+  - Quick (4.0.0)
+  - R.swift (6.1.0):
+    - R.swift.Library (~> 5.3.0)
+  - R.swift.Library (5.3.0)
+  - Sketch (3.0)
+  - SwiftLint (0.46.2)
+
+DEPENDENCIES:
+  - LicensePlist
+  - Quick
+  - R.swift
+  - Sketch
+  - SwiftLint
+
+SPEC REPOS:
+  trunk:
+    - LicensePlist
+    - Quick
+    - R.swift
+    - R.swift.Library
+    - Sketch
+    - SwiftLint
+
+SPEC CHECKSUMS:
+  LicensePlist: f7eaf6d1d39746d49415ab30f104b734d5163519
+  Quick: 6473349e43b9271a8d43839d9ba1c442ed1b7ac4
+  R.swift: ec98ff71c4ab2f6fd01dd077e5afd15e63a4834c
+  R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
+  Sketch: 49a4b71f7bc77316ed5f75ee79dedaa2b844d5e7
+  SwiftLint: 6bc52a21f0fd44cab9aa2dc8e534fb9f5e3ec507
+
+PODFILE CHECKSUM: ffa1d0aaa6aa4c4c862326d1dd1a549011bc1d04
+
+COCOAPODS: 1.11.2

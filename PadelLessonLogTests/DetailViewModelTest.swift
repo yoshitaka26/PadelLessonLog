@@ -22,9 +22,9 @@ class DetailViewModelTest: QuickSpec {
                 context("画像追加ボタンをタップ") {
                     beforeEach {
                         subscriptions.removeAll()
-                        detailViewModel.transiton.sink { value in
+                        detailViewModel.transition.sink { value in
                             switch value {
-                            case .imgaeView(_):
+                            case .imageView(_):
                                 flag = true
                             default:
                                 flag = false
@@ -42,7 +42,7 @@ class DetailViewModelTest: QuickSpec {
                 context("編集ボタンをタップ") {
                     beforeEach {
                         subscriptions.removeAll()
-                        detailViewModel.transiton.sink { value in
+                        detailViewModel.transition.sink { value in
                             switch value {
                             case .editView(_):
                                 flag = true
@@ -62,7 +62,7 @@ class DetailViewModelTest: QuickSpec {
                 context("前の画面に戻る") {
                     beforeEach {
                         subscriptions.removeAll()
-                        detailViewModel.transiton.sink { value in
+                        detailViewModel.transition.sink { value in
                             switch value {
                             case .back:
                                 flag = true

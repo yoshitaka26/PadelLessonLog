@@ -11,47 +11,46 @@ import Combine
 
 class LessonDataViewTest: QuickSpec {
     override func spec() {
-        let lessonImageView = R.storyboard.lessonData.instantiateInitialViewController()
-        guard let lessonImageView = lessonImageView else { return }
+        let lessonDataView = LessonDataViewController.makeInstance(dependency: .init(viewModel: LessonDataViewModel(dependency: .init(coreDataProtocol: CoreDataManager.shared))))
         
         describe("LessonDataView") {
             describe("動作検証") {
                 context("ライフサイクルをトリガする") {
                     beforeEach {
-                        lessonImageView.view.layoutIfNeeded()
+                        lessonDataView.view.layoutIfNeeded()
                     }
                     it("UIの状態が期待通りであること") {
-                        XCTAssertEqual(lessonImageView.allBarButton.tintColor, .colorButtonOn)
-                        XCTAssertEqual(lessonImageView.favoriteBarButton.tintColor, .colorButtonOff)
-                        XCTAssertEqual(lessonImageView.searchButton.tintColor, .colorButtonOff)
-                        XCTAssertEqual(lessonImageView.searchBar.isHidden, true)
+                        XCTAssertEqual(lessonDataView.allBarButton.tintColor, .colorButtonOn)
+                        XCTAssertEqual(lessonDataView.favoriteBarButton.tintColor, .colorButtonOff)
+                        XCTAssertEqual(lessonDataView.searchButton.tintColor, .colorButtonOff)
+                        XCTAssertEqual(lessonDataView.searchBar.isHidden, true)
                     }
                 }
                 context("Favoriteボタンをタップ") {
                     beforeEach {
-                        lessonImageView.favoriteButtonPressed(lessonImageView.favoriteBarButton)
+                        lessonDataView.favoriteButtonPressed(lessonDataView.favoriteBarButton)
                     }
                     it("UIの状態が期待通りであること") {
-                        XCTAssertEqual(lessonImageView.allBarButton.tintColor, .colorButtonOff)
-                        XCTAssertEqual(lessonImageView.favoriteBarButton.tintColor, .colorButtonOn)
+                        XCTAssertEqual(lessonDataView.allBarButton.tintColor, .colorButtonOff)
+                        XCTAssertEqual(lessonDataView.favoriteBarButton.tintColor, .colorButtonOn)
                     }
                 }
                 context("Allボタンをタップ") {
                     beforeEach {
-                        lessonImageView.allButtonPressed(lessonImageView.allBarButton)
+                        lessonDataView.allButtonPressed(lessonDataView.allBarButton)
                     }
                     it("UIの状態が期待通りであること") {
-                        XCTAssertEqual(lessonImageView.allBarButton.tintColor, .colorButtonOn)
-                        XCTAssertEqual(lessonImageView.favoriteBarButton.tintColor, .colorButtonOff)
+                        XCTAssertEqual(lessonDataView.allBarButton.tintColor, .colorButtonOn)
+                        XCTAssertEqual(lessonDataView.favoriteBarButton.tintColor, .colorButtonOff)
                     }
                 }
                 context("検索ボタンをタップ") {
                     beforeEach {
-                        lessonImageView.searchButtonPressed(lessonImageView.searchButton)
+                        lessonDataView.searchButtonPressed(lessonDataView.searchButton)
                     }
                     it("UIの状態が期待通りであること") {
-                        XCTAssertEqual(lessonImageView.searchButton.tintColor, .colorButtonOn)
-                        XCTAssertEqual(lessonImageView.searchBar.isHidden, false)
+                        XCTAssertEqual(lessonDataView.searchButton.tintColor, .colorButtonOn)
+                        XCTAssertEqual(lessonDataView.searchBar.isHidden, false)
                     }
                 }
             }

@@ -13,8 +13,14 @@ enum NewLessonTransition {
     case saved
     case deleted
 }
+enum NewLessonAlert {
+    case deleteImage
+    case titleEmpty
+    case titleStringCountOver
+    case dataProcessingError
+}
 
-class NewLessonViewModel: BaseViewModel {
+final class NewLessonViewModel: BaseViewModel {
     
     let imageButtonPressed = PassthroughSubject<Bool, Never>()
     let editImageButtonPressed = PassthroughSubject<Void, Never>()
@@ -34,9 +40,7 @@ class NewLessonViewModel: BaseViewModel {
     var lessonStepDidEndEditing = PassthroughSubject<(LessonStep, String), Never>()
     var lessonStepDidDelete = PassthroughSubject<IndexPath, Never>()
     
-    private(set) var deleteImageAlert = PassthroughSubject<Void, Never>()
-    private(set) var titleEmptyAlert = PassthroughSubject<Void, Never>()
-    private(set) var titleStringCountOverAlert = PassthroughSubject<Void, Never>()
+    private(set) var showAlert = PassthroughSubject<NewLessonAlert, Never>()
     private(set) var imageDeleted = PassthroughSubject<Void, Never>()
     private(set) var dataDeleted = PassthroughSubject<Void, Never>()
     private(set) var dataSaved = PassthroughSubject<Void, Never>()
@@ -44,13 +48,18 @@ class NewLessonViewModel: BaseViewModel {
     private(set) var editImageButtonIsHidden = CurrentValueSubject<Bool, Never>(false)
     private(set) var editStepButtonIsOn = CurrentValueSubject<Bool, Never>(false)
     private(set) var loadView = PassthroughSubject<Lesson, Never>()
-    private(set) var scrolStepTable = PassthroughSubject<Void, Never>()
-    private(set) var transiton = PassthroughSubject<NewLessonTransition, Never>()
+    private(set) var scrollStepTable = PassthroughSubject<Void, Never>()
+    private(set) var transition = PassthroughSubject<NewLessonTransition, Never>()
     
-    let coreDataMangaer = CoreDataManager.shared
-    let validateManager = ValidateManager.shared
+    let coreDataManager = CoreDataManager.shared
+    let validation = CharacterCountValidation()
     
-    override func mutate() {
+    override init() {
+        super.init()
+        mutate()
+    }
+    
+    func mutate() {
         lessonData.sink { [weak self] lessonData in
             guard let self = self else { return }
             guard let lesson = lessonData else { return }
@@ -69,11 +78,11 @@ class NewLessonViewModel: BaseViewModel {
             self.lessonTitleText.send(inputText)
             guard let text = inputText else { return }
             let maxCount = 40
-            let result: ValidateResult = self.validateManager.validate(word: text, maxCount: maxCount)
+            let result: ValidateResult = self.validation.validate(word: text, maxCount: maxCount)
             if result == .countOverError {
                 let dif = text.count - maxCount
                 let dropedText = text.dropLast(dif)
-                self.titleStringCountOverAlert.send()
+                self.showAlert.send(.titleStringCountOver)
                 self.lessonTitleText.send(dropedText.description)
             }
         }.store(in: &subscriptions)
@@ -82,37 +91,37 @@ class NewLessonViewModel: BaseViewModel {
             guard let self = self else { return }
             if !isSelected {
                 guard let lesson = self.lessonData.value else { return }
-                self.transiton.send(.addEditImage(lesson))
+                self.transition.send(.addEditImage(lesson))
             } else {
-                self.deleteImageAlert.send()
+                self.showAlert.send(.deleteImage)
             }
         }.store(in: &subscriptions)
         
         deleteImageConfirmed.sink { [weak self] _ in
             guard let self = self else { return }
-            guard let lesson = self.lessonData.value else { return }
-            guard let id = lesson.id else { return }
+            guard let lesson = self.lessonData.value, let id = lesson.id else { return }
             guard let courtImage = R.image.img_court(compatibleWith: .current) else { return }
-            if self.coreDataMangaer.resetLessonImage(lessonID: id.uuidString, image: courtImage) {
-                self.lessonData.send(self.coreDataMangaer.loadLessonData(lessonID: id.uuidString))
+            if self.coreDataManager.resetLessonImage(lessonID: id.uuidString, image: courtImage) {
+                self.lessonData.send(self.coreDataManager.loadLessonData(lessonID: id.uuidString))
                 self.imageDeleted.send()
             } else {
-                fatalError("画像が更新できない")
+                assertionFailure("画像が更新できない")
+                self.showAlert.send(.dataProcessingError)
             }
         }.store(in: &subscriptions)
         
         editImageButtonPressed.sink { [weak self] _ in
             guard let self = self else { return }
             guard let lesson = self.lessonData.value else { return }
-            self.transiton.send(.addEditImage(lesson))
+            self.transition.send(.addEditImage(lesson))
         }.store(in: &subscriptions)
         
         addStepButtonPressed.sink { [weak self] _ in
             guard let self = self else { return }
             guard let lesson = self.lessonData.value else { return }
-            self.coreDataMangaer.createStep(lesson: lesson)
+            self.coreDataManager.createStep(lesson: lesson)
             self.lessonData.send(lesson)
-            self.scrolStepTable.send()
+            self.scrollStepTable.send()
         }.store(in: &subscriptions)
         
         editStepButtonPressed.sink { [weak self] isSelected in
@@ -135,7 +144,7 @@ class NewLessonViewModel: BaseViewModel {
                 deleteStep = step
             }
             guard let step = deleteStep else { return }
-            self.coreDataMangaer.deleteStep(lesson: lesson, step: step, stpes: self.lessonStepData.value)
+            self.coreDataManager.deleteStep(lesson: lesson, step: step, steps: self.lessonStepData.value)
             self.lessonData.send(lesson)
         }.store(in: &subscriptions)
         
@@ -143,10 +152,11 @@ class NewLessonViewModel: BaseViewModel {
             guard let self = self else { return }
             guard let lesson = self.lessonData.value else { return }
             guard let id = lesson.id else { return }
-            if self.coreDataMangaer.deleteLessonData(lessonID: id.uuidString) {
+            if self.coreDataManager.deleteLessonData(lessonID: id.uuidString) {
                 self.dataDeleted.send()
             } else {
-                fatalError("データ削除失敗")
+                assertionFailure("データ削除失敗")
+                self.showAlert.send(.dataProcessingError)
             }
         }.store(in: &subscriptions)
         
@@ -155,20 +165,21 @@ class NewLessonViewModel: BaseViewModel {
             guard let lesson = self.lessonData.value else { return }
             guard let id = lesson.id else { return }
             guard let title = self.lessonTitleText.value else {
-                self.titleEmptyAlert.send()
+                self.showAlert.send(.titleEmpty)
                 return
             }
             let trinmingTitle = title.trimmingCharacters(in: .whitespaces)
-            let result: ValidateResult = self.validateManager.validate(word: trinmingTitle, maxCount: 0)
+            let result: ValidateResult = self.validation.validate(word: trinmingTitle, maxCount: 0)
             guard result == .valid else {
-                self.titleEmptyAlert.send()
+                self.showAlert.send(.titleEmpty)
                 return
             }
             
-            if self.coreDataMangaer.updateLessonTitle(lessonID: id.uuidString, title: title) {
+            if self.coreDataManager.updateLessonTitle(lessonID: id.uuidString, title: title) {
                 self.dataSaved.send()
             } else {
-                fatalError("データ保存失敗")
+                assertionFailure("データ保存失敗")
+                self.showAlert.send(.dataProcessingError)
             }
         }.store(in: &subscriptions)
     }

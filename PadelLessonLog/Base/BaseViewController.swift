@@ -78,8 +78,4 @@ class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
         keyboardShowing = false
         cancelHideKeyboard()
     }
-
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        return keyboardShowing && touch.view?.tag != BaseViewController.forbidHideKeyboardTag
-    }
 }

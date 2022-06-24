@@ -2,7 +2,7 @@
 //  LessonStep+CoreDataProperties.swift
 //  PadelLessonLog
 //
-//  Created by Yoshitaka on 2021/09/13.
+//  Created by Yoshitaka Tanaka on 2022/03/05.
 //
 //
 

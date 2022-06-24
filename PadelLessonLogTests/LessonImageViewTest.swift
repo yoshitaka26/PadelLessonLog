@@ -11,8 +11,7 @@ import Combine
 
 class LessonImageViewTest: QuickSpec {
     override func spec() {
-        let lessonImageView = R.storyboard.lessonImage.instantiateInitialViewController()
-        guard let lessonImageView = lessonImageView else { return }
+        let lessonImageView = LessonImageViewController.makeInstance(dependency: .init(viewModel: LessonImageViewModel(dependency: .init(coreDataProtocol: CoreDataManager.shared))))
         
         describe("LessonImageView") {
             describe("動作検証") {

@@ -2,7 +2,7 @@
 //  Lesson+CoreDataProperties.swift
 //  PadelLessonLog
 //
-//  Created by Yoshitaka on 2021/09/13.
+//  Created by Yoshitaka Tanaka on 2022/03/05.
 //
 //
 
@@ -21,9 +21,7 @@ extension Lesson {
     @NSManaged public var image: Data?
     @NSManaged public var imageOrientation: Int16
     @NSManaged public var imageSaved: Bool
-    @NSManaged public var orderNum: Int16
-    @NSManaged public var timeStamp: Date?
-    @NSManaged public var title: String?
+    @NSManaged public var inGroup: UUID?
     @NSManaged public var steps: NSSet?
 
 }
@@ -42,9 +40,5 @@ extension Lesson {
 
     @objc(removeSteps:)
     @NSManaged public func removeFromSteps(_ values: NSSet)
-
-}
-
-extension Lesson : Identifiable {
 
 }

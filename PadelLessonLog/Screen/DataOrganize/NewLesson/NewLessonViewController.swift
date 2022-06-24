@@ -9,19 +9,22 @@ import UIKit
 import Combine
 
 protocol NewLessonViewControllerDelegate: AnyObject {
-    func pushToLessonView()
+    func didSaveLessonData(_ newLessonViewController: NewLessonViewController)
 }
 
-class NewLessonViewController: BaseViewController {
-
-    @IBOutlet weak var lessonNameTextField: UITextField!
-    @IBOutlet weak var addImageButton: UIButton!
-    @IBOutlet weak var editImageButton: UIButton!
-    @IBOutlet weak var addStepButton: UIButton!
-    @IBOutlet weak var editStepButton: UIButton!
+final class NewLessonViewController: BaseViewController {
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var imageLabel: UILabel!
+    @IBOutlet private weak var stepLabel: UILabel!
     
-    @IBOutlet var mainTableView: UITableView!
-    @IBOutlet var imageButtonsAreaView: UIView!
+    @IBOutlet private weak var lessonNameTextField: UITextField!
+    @IBOutlet private weak var addImageButton: UIButton!
+    @IBOutlet private weak var editImageButton: UIButton!
+    @IBOutlet private weak var addStepButton: UIButton!
+    @IBOutlet private weak var editStepButton: UIButton!
+    
+    @IBOutlet private var mainTableView: UITableView!
+    @IBOutlet private var imageButtonsAreaView: UIView!
     
     private let viewModel = NewLessonViewModel()
     private var coreDataMangaer = CoreDataManager.shared
@@ -32,10 +35,11 @@ class NewLessonViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        localizeLabels()
         lessonNameTextField.delegate = self
         mainTableView.delegate = self
         mainTableView.dataSource = self
-        mainTableView.register(UINib(nibName: "StepTableViewCell", bundle: nil), forCellReuseIdentifier: "StepTableViewCellIdentifier")
+        mainTableView.register(R.nib.stepTableViewCell)
         
         mainTableView.tableFooterView = UIView()
         addImageButton.isSelected = false
@@ -81,10 +85,19 @@ class NewLessonViewController: BaseViewController {
             self.mainTableView.setEditing(isOn, animated: true)
         }.store(in: &subscriptions)
         
-        viewModel.deleteImageAlert.sink { [weak self] _ in
+        viewModel.showAlert.sink { [weak self] alert in
             guard let self = self else { return }
-            self.destructiveAlertView(withTitle: R.string.localizable.areYouSure(), cancelString: R.string.localizable.cancel(), destructiveString: R.string.localizable.delete()) {
-                self.viewModel.deleteImageConfirmed.send()
+            switch alert {
+            case .deleteImage:
+                self.destructiveAlertView(withTitle: R.string.localizable.areYouSure(), cancelString: R.string.localizable.cancel(), destructiveString: R.string.localizable.delete()) {
+                    self.viewModel.deleteImageConfirmed.send()
+                }
+            case .titleEmpty:
+                self.warningAlertView(withTitle: R.string.localizable.theTitleIsBlank())
+            case .titleStringCountOver:
+                self.warningAlertView(withTitle: R.string.localizable.theNumberOfCharactersIsExceeded())
+            case .dataProcessingError:
+                self.warningAlertView(withTitle: R.string.localizable.dataProcessingError())
             }
         }.store(in: &subscriptions)
         
@@ -96,33 +109,23 @@ class NewLessonViewController: BaseViewController {
         viewModel.dataDeleted.sink { [weak self] _ in
             guard let self = self else { return }
             self.infoAlertViewWithTitle(title: R.string.localizable.dataDeleted(), message: "") {
-                self.viewModel.transiton.send(.deleted)
+                self.viewModel.transition.send(.deleted)
             }
-        }.store(in: &subscriptions)
-        
-        viewModel.titleEmptyAlert.sink { [weak self] _ in
-            guard let self = self else { return }
-            self.warningAlertView(withTitle: R.string.localizable.theTitleIsBlank())
-        }.store(in: &subscriptions)
-        
-        viewModel.titleStringCountOverAlert.sink { [weak self] _ in
-            guard let self = self else { return }
-            self.warningAlertView(withTitle: R.string.localizable.theNumberOfCharactersIsExceeded())
         }.store(in: &subscriptions)
         
         viewModel.dataSaved.sink { [weak self] _ in
             guard let self = self else { return }
             self.infoAlertViewWithTitle(title: R.string.localizable.dataSaved(), message: "") {
-                self.viewModel.transiton.send(.saved)
+                self.viewModel.transition.send(.saved)
             }
         }.store(in: &subscriptions)
         
-        viewModel.scrolStepTable.sink { [weak self] _ in
+        viewModel.scrollStepTable.sink { [weak self] _ in
             guard let self = self else { return }
             self.mainTableView.scrollToRow(at: IndexPath(row: self.viewModel.lessonStepData.value.count - 1, section: 0), at: .top, animated: true)
         }.store(in: &subscriptions)
         
-        viewModel.transiton.sink { [weak self] transition in
+        viewModel.transition.sink { [weak self] transition in
             guard let self = self else { return }
             switch transition {
             case let .addEditImage(lesson):
@@ -133,24 +136,36 @@ class NewLessonViewController: BaseViewController {
                 self.navigationController?.pushViewController(addNewImageVC, animated: true)
             case .saved:
                 guard let safeDelegate = self.delegate else { return }
-                safeDelegate.pushToLessonView()
+                safeDelegate.didSaveLessonData(self)
                 self.navigationController?.popViewController(animated: true)
             case .deleted:
                 self.navigationController?.popViewController(animated: true)
             }
         }.store(in: &subscriptions)
     }
+    private func localizeLabels() {
+        titleLabel.text = R.string.localizable.title()
+        imageLabel.text = R.string.localizable.image()
+        stepLabel.text = R.string.localizable.steps()
+        addImageButton.setTitle(R.string.localizable.addImage(), for: .normal)
+        addImageButton.setTitle(R.string.localizable.delete(), for: .selected)
+        editImageButton.setTitle(R.string.localizable.editImage(), for: .normal)
+        addStepButton.setTitle(R.string.localizable.addStep(), for: .normal)
+        editStepButton.setTitle(R.string.localizable.edit(), for: .normal)
+        editStepButton.setTitle(R.string.localizable.done(), for: .selected)
+        lessonNameTextField.placeholder = R.string.localizable.pleaseEnterATitle()
+    }
 
-    @IBAction func addImageButtonPressed(_ sender: UIButton) {
+    @IBAction private func addImageButtonPressed(_ sender: UIButton) {
         viewModel.imageButtonPressed.send(sender.isSelected)
     }
-    @IBAction func editImageButtonPressed(_ sender: UIButton) {
+    @IBAction private func editImageButtonPressed(_ sender: UIButton) {
         viewModel.editImageButtonPressed.send()
     }
-    @IBAction func addStepButtonPressed(_ sender: UIButton) {
+    @IBAction private func addStepButtonPressed(_ sender: UIButton) {
         viewModel.addStepButtonPressed.send()
     }
-    @IBAction func editStepButtonPressed(_ sender: UIButton) {
+    @IBAction private func editStepButtonPressed(_ sender: UIButton) {
         viewModel.editStepButtonPressed.send(sender.isSelected)
     }
     @objc
@@ -193,9 +208,9 @@ extension NewLessonViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "StepTableViewCellIdentifier", for: indexPath) as! StepTableViewCell
-        for step in viewModel.lessonStepData.value where step.orderNum == indexPath.row {
-            cell.delegate = self
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.stepTableViewCell, for: indexPath)! // swiftlint:disable:this force_unwrapping
+        cell.delegate = self
+        if let step = viewModel.lessonStepData.value.first(where: { $0.orderNum == indexPath.row }) {
             cell.setup(index: indexPath.row, stepData: step)
         }
         return cell
@@ -206,17 +221,16 @@ extension NewLessonViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-extension NewLessonViewController: InputTextTableCellDelegate {
-    func textViewDidBeingEditing(index: Int?) {
-        guard let cellIndex = index else { return }
+extension NewLessonViewController: StepTableViewCellDelegate {
+    func stepTableViewCell(_ stepTableViewCell: StepTableViewCell, willEditTextForRowAt: Int?) {
+        guard let cellIndex = willEditTextForRowAt else { return }
         mainTableView.scrollToRow(at: IndexPath(row: cellIndex, section: 0), at: .top, animated: true)
         guard let view = imageButtonsAreaView else { return }
         view.isHidden = true
     }
-    
-    func textViewDidEndEditing(cell: StepTableViewCell, value: String) {
-        guard let lessonStep = cell.stepData else { return }
-        viewModel.lessonStepDidEndEditing.send((lessonStep, value))
+    func stepTableViewCell(_ stepTableViewCell: StepTableViewCell, didEditText newText: String) {
+        guard let lessonStep = stepTableViewCell.stepData else { return }
+        viewModel.lessonStepDidEndEditing.send((lessonStep, newText))
         guard let view = imageButtonsAreaView else { return }
         view.isHidden = false
     }

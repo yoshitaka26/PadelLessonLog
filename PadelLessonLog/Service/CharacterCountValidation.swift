@@ -1,5 +1,5 @@
 //
-//  ValidateManager.swift
+//  CharacterCountValidation.swift
 //  PadelLessonLog
 //
 //  Created by Yoshitaka Tanaka on 2021/12/27.
@@ -13,9 +13,7 @@ enum ValidateResult {
     case countOverError
 }
 
-class ValidateManager {
-    static let shared = ValidateManager()
-    
+final class CharacterCountValidation {
     func validate(word: String, maxCount: Int) -> ValidateResult {
         guard !word.isEmpty else { return .emptyError }
         guard word.count != 0 else { return .emptyError }

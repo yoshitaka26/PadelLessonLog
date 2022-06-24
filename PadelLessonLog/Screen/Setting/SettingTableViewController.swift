@@ -7,12 +7,14 @@
 
 import UIKit
 
-class SettingTableViewController: UITableViewController {
-    @IBOutlet weak var versionLabel: UILabel!
-
+final class SettingTableViewController: UITableViewController {
+    @IBOutlet private weak var versionLabel: UILabel!
+    @IBOutlet private weak var licenseLabel: UILabel!
+    @IBOutlet private weak var versionTitleLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        localizeLabels()
         // アプリバージョン
         if let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
             versionLabel.text = version
@@ -22,5 +24,9 @@ class SettingTableViewController: UITableViewController {
     @objc
     func back() {
         navigationController?.popViewController(animated: true)
+    }
+    private func localizeLabels() {
+        licenseLabel.text = R.string.localizable.license()
+        versionTitleLabel.text = R.string.localizable.version()
     }
 }

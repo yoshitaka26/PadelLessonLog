@@ -7,9 +7,9 @@
 
 import UIKit
 
-class ImageViewController: UIViewController {
+final class ImageViewController: UIViewController {
 
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet private weak var imageView: UIImageView!
     var lesson: Lesson?
     override func viewDidLoad() {
         super.viewDidLoad()

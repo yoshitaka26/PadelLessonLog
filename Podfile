@@ -6,10 +6,11 @@ target 'PadelLessonLog' do
   use_frameworks!
 
   # Pods for PadelLessonLog
+  pod 'LicensePlist'
   pod 'Sketch'
   pod 'R.swift'
-  pod 'Swinject'
   pod 'SwiftLint'
+  # pod 'Swinject'
 
   target 'PadelLessonLogTests' do
     inherit! :search_paths

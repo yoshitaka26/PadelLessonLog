@@ -17,9 +17,25 @@
 "The title is blank" = "タイトルが空欄です";
 "The number of characters is exceeded" = "入力文字数が\n上限を超えています";
 
+"Data processing error" = "データ処理異常が発生しました";
+
 "Detail" = "データ詳細";
 "Image View" = "イメージ";
 "Edit Data" = "データ編集";
 
 "Create New Data" = "新規データ";
 "Draw View" = "描画";
+
+"Title" = "タイトル";
+"Image" = "イメージ";
+"Steps" = "ステップ";
+"Add Image" = "追加";
+"Add Step" = "追加";
+"Edit" = "選択削除";
+"Done" = "完了";
+"Edit Image" = "編集";
+"Delete" = "削除";
+"Please enter a title" = "入力してください";
+"ABOUT APPLICATION" = "アプリ詳細";
+"License" = "ライセンス";
+"Version" = "バージョン";

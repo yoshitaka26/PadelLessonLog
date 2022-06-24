@@ -9,16 +9,27 @@ import UIKit
 import Combine
 
 final class LessonImageViewController: BaseViewController {
+    struct Dependency {
+        let viewModel: LessonImageViewModel
+    }
+    static func makeInstance(dependency: Dependency) -> LessonImageViewController {
+        // swiftlint:disable force_unwrapping
+        let viewController = R.storyboard.lessonImage.lessonImage()!
+        // swiftlint:enable force_unwrapping
+        viewController.viewModel = dependency.viewModel
+        return viewController
+    }
 
-    @IBOutlet weak var customToolbar: UIToolbar!
-    @IBOutlet weak var allBarButton: UIBarButtonItem!
-    @IBOutlet weak var favoriteBarButton: UIBarButtonItem!
-    @IBOutlet weak var arBarButton: UIBarButtonItem!
-    @IBOutlet weak var detailButton: UIButton!
+    @IBOutlet private weak var customToolbar: UIToolbar!
+    // swiftlint:disable private_outlet
+    @IBOutlet private(set) weak var allBarButton: UIBarButtonItem!
+    @IBOutlet private(set) weak var favoriteBarButton: UIBarButtonItem!
+    // swiftlint:enable private_outlet
+    @IBOutlet private weak var arBarButton: UIBarButtonItem!
+    @IBOutlet private weak var detailButton: UIButton!
+    @IBOutlet private weak var customCollectionView: UICollectionView!
     
-    @IBOutlet weak var customCollectionView: UICollectionView!
-    
-    private let viewModel = LessonImageViewModel()
+    private var viewModel: LessonImageViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,8 +46,7 @@ final class LessonImageViewController: BaseViewController {
         customCollectionView.delegate = self
         customCollectionView.dataSource = self
         
-        customCollectionView.register(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCell")
-        
+        customCollectionView.register(R.nib.imageCollectionViewCell)
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         customCollectionView.setCollectionViewLayout(layout, animated: true)
@@ -67,37 +77,31 @@ final class LessonImageViewController: BaseViewController {
             .assign(to: \.isHidden, on: detailButton)
             .store(in: &subscriptions)
         
-        viewModel.transiton.sink { [weak self] transition in
+        viewModel.transition.sink { [weak self] transition in
             guard let self = self else { return }
             switch transition {
             case .setting:
-                let storyboard = UIStoryboard(name: "Setting", bundle: nil)
-                let vc = storyboard.instantiateViewController(identifier: "Setting")
+                guard let vc = R.storyboard.setting.setting() else { return }
                 self.navigationController?.pushViewController(vc, animated: true)
             case let .lesson(lessonData, isNew):
-                let storyboard = UIStoryboard(name: "NewLesson", bundle: nil)
-                let vc = storyboard.instantiateViewController(identifier: "NewLesson")
-                guard let newLessonVC = vc as? NewLessonViewController else { return }
+                guard let newLessonVC = R.storyboard.newLesson.newLesson() else { return }
                 newLessonVC.lessonData = lessonData
                 newLessonVC.delegate = self
-                
                 if isNew {
                     newLessonVC.navigationItem.title = R.string.localizable.createNewData()
                 } else {
                     newLessonVC.navigationItem.title = R.string.localizable.editData()
                 }
-                self.navigationController?.pushViewController(vc, animated: true)
+                self.navigationController?.pushViewController(newLessonVC, animated: true)
             case .arView:
                 guard let vc = R.storyboard.padelAR.padelAR() else { return }
                 self.navigationController?.pushViewController(vc, animated: true)
             case let .detail(lessonData):
-                let storyboard = UIStoryboard(name: "Detail", bundle: nil)
-                let vc = storyboard.instantiateViewController(identifier: "Detail")
-                guard let detailVC = vc as? DetailViewController else { return }
+                guard let detailVC = R.storyboard.detail.detail() else { return }
                 detailVC.lessonData = lessonData
                 detailVC.delegate = self
                 
-                let nvc = UINavigationController(rootViewController: vc)
+                let nvc = UINavigationController(rootViewController: detailVC)
                 self.present(nvc, animated: true)
             }
         }.store(in: &subscriptions)
@@ -121,21 +125,21 @@ final class LessonImageViewController: BaseViewController {
         viewModel.addLessonButtonPressed.send()
     }
     
+    // swiftlint:disable private_action
     @IBAction func allButtonPressed(_ sender: UIBarButtonItem) {
         viewModel.allButtonPressed.send()
     }
-    
     @IBAction func favoriteButtonPressed(_ sender: UIBarButtonItem) {
         viewModel.favoriteButtonPressed.send()
     }
+    // swiftlint:enable private_action
     
-    @IBAction func arButtonPressed(_ sender: UIBarButtonItem) {
+    @IBAction private func arButtonPressed(_ sender: UIBarButtonItem) {
         viewModel.arButtonPressed.send()
     }
-    @IBAction func detailButtonPressed(_ sender: UIButton) {
+    @IBAction private func detailButtonPressed(_ sender: UIButton) {
         let cell = self.customCollectionView.visibleCells.first as? ImageCollectionViewCell
-        guard let safeCell = cell else { return }
-        guard let lesson = safeCell.lesson else { return }
+        guard let safeCell = cell, let lesson = safeCell.lesson else { return }
         viewModel.detailButtonPressed.send(lesson)
     }
 }
@@ -147,10 +151,9 @@ extension LessonImageViewController: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let customCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
-        guard let imageCell = customCell as? ImageCollectionViewCell else { return customCell }
-        imageCell.setLessonData(lesson: viewModel.lessonsArray.value[indexPath.row], row: indexPath.row)
-        return imageCell
+        let customCell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.imageCollectionViewCell, for: indexPath)! // swiftlint:disable:this force_unwrapping
+        customCell.setLessonData(lesson: viewModel.lessonsArray.value[indexPath.row], row: indexPath.row)
+        return customCell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -181,24 +184,20 @@ extension LessonImageViewController: UICollectionViewDelegate, UICollectionViewD
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let cells = customCollectionView.visibleCells
-        var indexArray: [Int] = []
-        for cell in cells {
-            guard let safeCell = cell as? ImageCollectionViewCell else { return }
-            indexArray.append(safeCell.row ?? 0)
-        }
+        let indexArray = cells.map { ($0 as? ImageCollectionViewCell)?.row ?? 0 }
         guard !indexArray.isEmpty else { return }
         viewModel.scrollViewDidStop.send(indexArray)
     }
 }
 
 extension LessonImageViewController: DetailViewControllerDelegate {
-    func pushToEditView(lesson: Lesson) {
+    func detailViewController(_ detailViewController: DetailViewController, didSelectEdit lesson: Lesson) {
         viewModel.pushToEditLessonView.send(lesson)
     }
 }
 
 extension LessonImageViewController: NewLessonViewControllerDelegate {
-    func pushToLessonView() {
+    func didSaveLessonData(_ newLessonViewController: NewLessonViewController) {
         viewModel.pushBackFromNewLessonView.send()
     }
 }

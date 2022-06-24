@@ -2,7 +2,7 @@
 //  Lesson+CoreDataClass.swift
 //  PadelLessonLog
 //
-//  Created by Yoshitaka on 2021/09/13.
+//  Created by Yoshitaka Tanaka on 2022/03/05.
 //
 //
 
@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 @objc(Lesson)
-public class Lesson: NSManagedObject {
+public class Lesson: BaseLesson {
 
 }

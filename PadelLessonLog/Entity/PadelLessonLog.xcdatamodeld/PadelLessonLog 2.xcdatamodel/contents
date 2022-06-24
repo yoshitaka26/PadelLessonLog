@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21A559" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="BaseLesson" representedClassName="BaseLesson" isAbstract="YES" syncable="YES">
+        <attribute name="archived" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="orderNum" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="Lesson" representedClassName="Lesson" parentEntity="BaseLesson" syncable="YES">
+        <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="image" optional="YES" attributeType="Binary"/>
+        <attribute name="imageOrientation" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="imageSaved" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="inGroup" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="steps" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LessonStep" inverseName="lesson" inverseEntity="LessonStep"/>
+    </entity>
+    <entity name="LessonGroup" representedClassName="LessonGroup" parentEntity="BaseLesson" syncable="YES">
+        <attribute name="groupId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="subTitle" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="LessonStep" representedClassName="LessonStep" syncable="YES">
+        <attribute name="explication" optional="YES" attributeType="String"/>
+        <attribute name="lessonID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="orderNum" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="lesson" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lesson" inverseName="steps" inverseEntity="Lesson"/>
+    </entity>
+    <elements>
+        <element name="Lesson" positionX="-63" positionY="-18" width="128" height="134"/>
+        <element name="LessonStep" positionX="160" positionY="192" width="128" height="89"/>
+        <element name="LessonGroup" positionX="45" positionY="126" width="128" height="59"/>
+        <element name="BaseLesson" positionX="54" positionY="135" width="128" height="104"/>
+    </elements>
+</model>

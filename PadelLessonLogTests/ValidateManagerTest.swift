@@ -14,10 +14,10 @@ class ValidateManagerTest: QuickSpec {
     override func spec() {
         describe("ValidateManager") {
             // テスト用の変数
-            let validateManager = ValidateManager()
+            let validation = CharacterCountValidation()
             var inputString: String!
             var subject: ValidateResult {
-                return validateManager.validate(word: inputString, maxCount: 8)
+                return validation.validate(word: inputString, maxCount: 8)
             }
             
             // 概要

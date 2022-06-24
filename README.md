@@ -34,6 +34,7 @@
 外部サーバとの通信なし
 
 ## 📙使用ライブラリ
+* SwiftLint : https://cocoapods.org/pods/SwiftLint
 * Sketch : https://cocoapods.org/pods/Sketch
 * R.swift : https://cocoapods.org/pods/R.swift
 * Swinject : https://cocoapods.org/pods/Swinject
@@ -44,4 +45,4 @@
 * Twitter : https://twitter.com/os_yoshi
 
 ## ♠️License
-"PadelLessonLog" is under [MIT license](https://en.wikipedia.org/wiki/MIT_License).
+"PadelLessonLog" is under [MIT license](https://opensource.org/licenses/MIT).

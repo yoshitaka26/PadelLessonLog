@@ -8,10 +8,10 @@
 import UIKit
 import Sketch
 
-class AddNewImageViewController: BaseViewController {
+final class AddNewImageViewController: BaseViewController {
 
-    @IBOutlet weak var sketchView: SketchView!
-    @IBOutlet weak var customToolbar: UIToolbar!
+    @IBOutlet private weak var sketchView: SketchView!
+    @IBOutlet private weak var customToolbar: UIToolbar!
     
     private var viewModel = AddNewImageViewModel()
     
@@ -81,15 +81,13 @@ class AddNewImageViewController: BaseViewController {
             guard let self = self else { return }
             switch action {
             case let .colorTableShow(color):
-                let colorTavleVC = R.storyboard.colorTable.colorTable()
-                guard let colorTableVC = colorTavleVC else { return }
+                guard let colorTableVC = R.storyboard.colorTable.colorTable() else { return }
                 colorTableVC.delegate = self
                 colorTableVC.objectColor = color
                 let screenSize = UIScreen.main.bounds.size
                 self.openPopUpController(popUpController: colorTableVC, sourceView: self.customToolbar, rect: CGRect(x: screenSize.width / 3.2, y: 0, width: screenSize.width / 3, height: screenSize.height / 5), arrowDirections: .down, canOverlapSourceViewRect: true)
             case let .objectTableShow(object):
-                let objectTableVC = R.storyboard.objectTable.objectTable()
-                guard let objectTableVC = objectTableVC else { return }
+                guard let objectTableVC = R.storyboard.objectTable.objectTable() else { return }
                 objectTableVC.delegate = self
                 objectTableVC.objectType = object
                 let screenSize = UIScreen.main.bounds.size
@@ -101,6 +99,11 @@ class AddNewImageViewController: BaseViewController {
             case .back:
                 self.navigationController?.popViewController(animated: true)
             }
+        }.store(in: &subscriptions)
+        
+        viewModel.imageSaveError.sink { [weak self] _ in
+            guard let self = self else { return }
+            self.warningAlertView(withTitle: R.string.localizable.dataProcessingError())
         }.store(in: &subscriptions)
     }
     
@@ -136,7 +139,6 @@ class AddNewImageViewController: BaseViewController {
     @objc
     func back() {
         viewModel.backButtonPressed.send()
-        navigationController?.popViewController(animated: true)
     }
     @objc
     func save() {

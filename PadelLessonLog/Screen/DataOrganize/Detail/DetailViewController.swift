@@ -8,14 +8,14 @@
 import UIKit
 
 protocol DetailViewControllerDelegate: AnyObject {
-    func pushToEditView(lesson: Lesson)
+    func detailViewController(_ detailViewController: DetailViewController, didSelectEdit lesson: Lesson)
 }
 
-class DetailViewController: BaseViewController {
+final class DetailViewController: BaseViewController {
 
-    @IBOutlet weak var stepTableView: UITableView!
-    @IBOutlet weak var lessonTitleLabel: UILabel!
-    @IBOutlet weak var imageButton: UIButton!
+    @IBOutlet private weak var stepTableView: UITableView!
+    @IBOutlet private weak var lessonTitleLabel: UILabel!
+    @IBOutlet private weak var imageButton: UIButton!
     var lessonData: Lesson?
     
     private let viewModel = DetailViewModel()
@@ -45,16 +45,16 @@ class DetailViewController: BaseViewController {
             self.stepTableView.reloadData()
         }.store(in: &subscriptions)
         
-        viewModel.transiton.sink { [weak self] transition in
+        viewModel.transition.sink { [weak self] transition in
             guard let self = self else { return }
             switch transition {
-            case let .imgaeView(_lessonData):
+            case let .imageView(_lessonData):
                 guard let vc = R.storyboard.imageView.imageView() else { return }
                 vc.lesson = _lessonData
                 self.navigationController?.pushViewController(vc, animated: true)
             case let .editView(_lessonData):
                 self.dismiss(animated: true) {
-                    self.delegate?.pushToEditView(lesson: _lessonData)
+                    self.delegate?.detailViewController(self, didSelectEdit: _lessonData)
                 }
             case .back:
                 self.dismiss(animated: true)
@@ -62,7 +62,7 @@ class DetailViewController: BaseViewController {
         }.store(in: &subscriptions)
     }
     
-    @IBAction func imageButtonPressed(_ sender: UIButton) {
+    @IBAction private func imageButtonPressed(_ sender: UIButton) {
         viewModel.imageViewButtonPressed.send()
     }
     @objc
@@ -81,7 +81,7 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.detailCell, for: indexPath)! // swiftlint:disable:this force_unwrapping
         let stepLabel = cell.contentView.viewWithTag(1) as! UILabel
         for step in viewModel.tableViewCellData.value where step.orderNum == indexPath.row {
             stepLabel.text = step.explication

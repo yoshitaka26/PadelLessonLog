@@ -10,10 +10,4 @@ import Combine
 
 class BaseViewModel {
     var subscriptions = Set<AnyCancellable>()
-    
-    init() {
-        mutate()
-    }
-    
-    func mutate() { }
 }

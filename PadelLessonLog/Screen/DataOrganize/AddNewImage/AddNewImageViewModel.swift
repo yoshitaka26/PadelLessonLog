@@ -17,7 +17,7 @@ enum AddNewImageViewAction {
     case back
 }
 
-class AddNewImageViewModel: BaseViewModel {
+final class AddNewImageViewModel: BaseViewModel {
     
     let colorTableButtonPressed = PassthroughSubject<Void, Never>()
     let objectTableButtonPressed = PassthroughSubject<Void, Never>()
@@ -45,9 +45,16 @@ class AddNewImageViewModel: BaseViewModel {
     
     private(set) var action = PassthroughSubject<AddNewImageViewAction, Never>()
     
-    private var coreDataMangaer = CoreDataManager.shared
+    private(set) var imageSaveError = PassthroughSubject<Void, Never>()
     
-    override func mutate() {
+    private var coreDataManager = CoreDataManager.shared
+    
+    override init() {
+        super.init()
+        mutate()
+    }
+    
+    func mutate() {
         loadLessonImageData.sink { [weak self] id, image in
             guard let self = self else { return }
             self.lessonID.send(id)
@@ -73,11 +80,12 @@ class AddNewImageViewModel: BaseViewModel {
             guard let self = self else { return }
             guard let id = self.lessonID.value else { return }
             guard let image = savingImage else { return }
-            let isSaved = self.coreDataMangaer.updateLessonImage(lessonID: id, image: image)
+            let isSaved = self.coreDataManager.updateLessonImage(lessonID: id, image: image)
             if isSaved {
                 self.action.send(.saved)
             } else {
-                fatalError("画像が更新できない")
+                assertionFailure("画像が更新できない")
+                self.imageSaveError.send()
             }
         }.store(in: &subscriptions)
         

@@ -19,7 +19,7 @@ class StubManager {
     }
     
     func setUpStubCoreData() {
-        let storeCoordinator = appDelegate.persistentContainer.persistentStoreCoordinator
+        let storeCoordinator = CoreDataManager.shared.persistentContainer.persistentStoreCoordinator
         do {
             try storeCoordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
         } catch let error as NSError {

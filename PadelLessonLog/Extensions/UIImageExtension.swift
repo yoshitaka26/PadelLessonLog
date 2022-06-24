@@ -7,14 +7,20 @@
 
 import UIKit
 
-// swiftlint:disable force_unwrapping
 extension UIImage {
-    static let gearshape = UIImage(systemName: "gearshape")!
-    static let plusCircle = UIImage(systemName: "plus.circle")!
-    static let trashCircle = UIImage(systemName: "trash.circle")!
-    static let checkmarkCircle = UIImage(systemName: "checkmark.circle")!
-    static let chevronBackwardCircle = UIImage(systemName: "chevron.backward.circle")!
-    static let pencilTipCropCircleBadgePlus = UIImage(systemName: "pencil.tip.crop.circle.badge.plus")!
-    static let arrowClockwiseCircle = UIImage(systemName: "arrow.clockwise.circle")!
+    static let gearshape = UIImage.named("gearshape")
+    static let plusCircle = UIImage.named("plus.circle")
+    static let trashCircle = UIImage.named("trash.circle")
+    static let checkmarkCircle = UIImage.named("checkmark.circle")
+    static let chevronBackwardCircle = UIImage.named("chevron.backward.circle")
+    static let pencilTipCropCircleBadgePlus = UIImage.named("pencil.tip.crop.circle.badge.plus")
+    static let arrowClockwiseCircle = UIImage.named("arrow.clockwise.circle")
+    
+    static func named(_ name: String) -> UIImage {
+        if let image = UIImage(systemName: name) {
+            return image
+        } else {
+            fatalError("Could not initialize \(UIImage.self) named \(name).")
+        }
+    }
 }
-// swiftlint:enable force_unwrapping

@@ -14,7 +14,7 @@
         <!--LessonImage-->
         <scene sceneID="CeM-Rn-Taf">
             <objects>
-                <viewController id="fTc-pP-j0C" userLabel="LessonImage" customClass="LessonImageViewController" customModule="PadelLessonLog" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LessonImage" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fTc-pP-j0C" userLabel="LessonImage" customClass="LessonImageViewController" customModule="PadelLessonLog" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="p5c-N7-vcC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

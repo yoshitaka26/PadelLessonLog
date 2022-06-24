@@ -32,7 +32,7 @@ protocol ColorTableViewControllerDelegate: AnyObject {
     func ColorTableViewController(colorTableViewController: ColorTableViewController, didSelectColor: ObjectColor)
 }
 
-class ColorTableViewController: UITableViewController {
+final class ColorTableViewController: UITableViewController {
     
     weak var delegate: ColorTableViewControllerDelegate?
     var objectColor = ObjectColor.defaultValue()
@@ -56,9 +56,7 @@ class ColorTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let selectedColor = ObjectColor(rawValue: indexPath.row) {
-            if let delegate = self.delegate {
-                delegate.ColorTableViewController(colorTableViewController: self, didSelectColor: selectedColor)
-            }
+            delegate?.ColorTableViewController(colorTableViewController: self, didSelectColor: selectedColor)
         }
     }
 }

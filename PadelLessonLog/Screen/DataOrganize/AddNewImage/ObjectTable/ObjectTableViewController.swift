@@ -19,7 +19,7 @@ protocol ObjectTableViewControllerDelegate: AnyObject {
     func ObjectTableViewController(objectTableViewController: ObjectTableViewController, didSelectObject: ObjectType)
 }
 
-class ObjectTableViewController: UITableViewController {
+final class ObjectTableViewController: UITableViewController {
     
     weak var delegate: ObjectTableViewControllerDelegate?
     var objectType = ObjectType.defaultValue()
@@ -43,9 +43,7 @@ class ObjectTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let selectedObject = ObjectType(rawValue: indexPath.row) {
-            if let delegate = self.delegate {
-                delegate.ObjectTableViewController(objectTableViewController: self, didSelectObject: selectedObject)
-            }
+            delegate?.ObjectTableViewController(objectTableViewController: self, didSelectObject: selectedObject)
         }
     }
 }
